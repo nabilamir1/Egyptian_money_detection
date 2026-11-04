@@ -1,148 +1,283 @@
-# Egyptian Currency Image Classification
+<div align="center">
 
-A notebook-based computer vision project for classifying images of Egyptian banknotes by denomination and, where represented in the labels, note series (for example, `10` and `10 (new)`). The repository explores image enhancement, transfer learning with EfficientNet, and CNN classifiers trained on SIFT- and HOG-based visual representations.
+# 🇪🇬 Egyptian Currency Recognition
 
-> **Scope:** The notebooks perform image-class classification. They do not verify that a banknote is genuine, detect counterfeit notes, or establish monetary value from a live transaction. Do not use these experimental models for financial decisions or as a substitute for a validated currency-authentication system.
+### Deep Learning & Computer Vision for Egyptian Banknote Classification
 
-## Project contents
+<p>
+  <img src="https://img.shields.io/badge/Python-3.x-blue?style=for-the-badge&logo=python&logoColor=white">
+  <img src="https://img.shields.io/badge/TensorFlow-Keras-orange?style=for-the-badge&logo=tensorflow&logoColor=white">
+  <img src="https://img.shields.io/badge/Computer-Vision-green?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Deep-Learning-purple?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Status-Completed-success?style=for-the-badge">
+</p>
 
-| File or folder | Purpose |
-|---|---|
-| `enhanced_money_detection_with_visuals.ipynb` | Image enhancement, class balancing, EfficientNetB3 fine-tuning, and test evaluation. |
-| `improved_money_detection.ipynb` | Earlier EfficientNetB0 transfer-learning experiment. |
-| `filters.ipynb` | SIFT, HOG, and combined SIFT+HOG image transformations with CNN training and evaluation. |
-| `cam.ipynb`, `test.ipynb` | Inference experiments that load the combined SIFT/HOG model. |
-| `combined_sift_hog_model.h5`, `sift_model.h5`, `hog_model.h5` | Saved Keras models from the filter experiments. |
-| `efficientnetb0_egyptian_currency_model.h5` | Saved EfficientNetB0 model artifact. |
-| `Egyptian new currency/` | Currency dataset used by the notebooks. |
-| `Egyptian currency/`, `Euro coins and bills/` | Additional image collections included in the repository. |
+**An experimental AI-powered system for recognizing and classifying Egyptian banknotes using traditional Computer Vision techniques and Deep Learning architectures.**
 
-The notebooks are research and demonstration workflows; the repository does not currently provide a packaged application or a single command-line prediction interface.
+</div>
 
-## Classes
+---
 
-The enhanced EfficientNetB3 notebook uses nine classes:
+## 📌 Project Overview
 
-```text
-1, 5, 10, 10 (new), 20, 20 (new), 50, 100, 200
-```
+Egyptian Currency Recognition is a Computer Vision and Deep Learning project that explores different approaches to identifying Egyptian banknote denominations from images.
 
-These are the folder names used as labels by that notebook. Confirm the classes in your training directory before training or running inference; the class set and ordering must match the model and label encoder used for predictions.
+The project combines traditional feature extraction techniques with modern deep learning architectures to investigate their effectiveness in currency image classification.
 
-## Requirements
+Multiple experiments were implemented using:
 
-- Python with Jupyter Notebook or JupyterLab
-- TensorFlow / Keras
-- OpenCV (`opencv-python`)
-- NumPy, Pillow, scikit-learn, scikit-image, pandas, matplotlib, seaborn, and tqdm
+- **SIFT (Scale-Invariant Feature Transform)**
+- **HOG (Histogram of Oriented Gradients)**
+- **Combined SIFT + HOG Feature Extraction**
+- **CNN (Convolutional Neural Networks)**
+- **EfficientNet Transfer Learning**
 
-Create and activate a virtual environment, then install the notebook dependencies:
+The goal is to compare different image representation and classification approaches and evaluate their performance on Egyptian currency images.
 
-```bash
-python -m venv .venv
-```
+## 🎯 Project Objectives
 
-```bash
-# Windows PowerShell
-.venv\Scripts\Activate.ps1
+- Build an image classification pipeline for Egyptian banknotes.
+- Explore traditional Computer Vision feature extraction techniques.
+- Implement CNN-based classification models.
+- Apply Transfer Learning using EfficientNet.
+- Compare different model architectures and feature extraction strategies.
+- Evaluate model performance using classification metrics.
+- Investigate image preprocessing and enhancement techniques.
 
-# macOS / Linux
-source .venv/bin/activate
-```
+---
 
-```bash
-python -m pip install --upgrade pip
-python -m pip install tensorflow opencv-python numpy pillow scikit-learn scikit-image pandas matplotlib seaborn tqdm jupyter
-```
+## 🚀 Key Features & Technical Approaches
 
-TensorFlow installation depends on your operating system and hardware. Follow the [official TensorFlow installation instructions](https://www.tensorflow.org/install) if the command above is not suitable for your environment. Training EfficientNet models can take several minutes or longer and benefits from a compatible GPU.
+### 1. Image Preprocessing & Enhancement
 
-## Dataset layout
+Image preprocessing techniques are used to improve image quality and prepare the dataset for model training.
 
-The training notebooks expect a split dataset with one subfolder per class:
+The experiments explore:
 
-```text
-Egyptian new currency/
-└── dataset/
-    ├── train/
-    │   ├── 1/
-    │   ├── 5/
-    │   ├── 10/
-    │   ├── 10 (new)/
-    │   ├── 20/
-    │   ├── 20 (new)/
-    │   ├── 50/
-    │   ├── 100/
-    │   └── 200/
-    ├── valid/
-    │   └── <same class folders>
-    └── test/
-        └── <same class folders>
-```
+- Image resizing and normalization.
+- Image enhancement and filtering.
+- Dataset organization and class balancing.
+- Preparing training, validation, and testing datasets.
 
-Each image's containing folder is its label. The validation and test splits must use the same class folders as training. The notebooks contain machine-specific absolute paths such as `D:\Fake money detection\Egyptian new currency\dataset\train`; update `train_dir`, `val_dir`, and `test_dir` to point to your local dataset before running the cells.
+### 2. SIFT Feature Extraction
 
-For example, with the notebook opened from the repository root:
+SIFT extracts distinctive local features from images.
 
-```python
-from pathlib import Path
+It helps capture important visual patterns that remain relatively robust under changes in scale and rotation.
 
-project_dir = Path.cwd()
-dataset_dir = project_dir / "Egyptian new currency" / "dataset"
-train_dir = dataset_dir / "train"
-val_dir = dataset_dir / "valid"
-test_dir = dataset_dir / "test"
-```
+### 3. HOG Feature Extraction
 
-If the dataset is stored elsewhere, set `project_dir` to its parent directory. The repository also contains standalone image collections; those are not a replacement for the `train` / `valid` / `test` class-folder structure used by the training notebooks.
+Histogram of Oriented Gradients extracts image features based on local gradient orientations.
 
-## Run the experiments
+It represents structural and shape-related information that can help distinguish different banknote categories.
 
-1. Install the dependencies and open the repository in Jupyter.
-2. Choose a notebook:
-   - `enhanced_money_detection_with_visuals.ipynb` for the EfficientNetB3 experiment.
-   - `improved_money_detection.ipynb` for the EfficientNetB0 experiment.
-   - `filters.ipynb` to compare SIFT, HOG, and combined SIFT/HOG preprocessing.
-3. Update all dataset paths in the notebook to match your local folders.
-4. Run the cells in order. Training notebooks create models in the notebook's working directory when their save cells run.
+### 4. Combined SIFT + HOG
 
-The enhanced EfficientNetB3 pipeline resizes images to 224 × 224, applies colored-image denoising and CLAHE contrast enhancement, uses image augmentation for training, and fine-tunes the last layers of an ImageNet-pretrained EfficientNetB3. It trains with class weights and early stopping.
+The project investigates combining SIFT and HOG representations to leverage complementary visual information.
 
-The filter experiment resizes each image to 224 × 224 and creates SIFT keypoint, HOG visualization, or combined SIFT+HOG images. An EfficientNetB0-based CNN then classifies those transformed images. These are image transformations used as model inputs; the saved files are Keras classifiers, not standalone SIFT/HOG descriptor matchers.
+The extracted representations are used in a CNN-based classification experiment.
 
-## Reported notebook results
+### 5. EfficientNet Transfer Learning
 
-The checked-in `filters.ipynb` outputs the following test accuracy values on its 290-image test split:
+EfficientNet is explored as a deep learning approach for image classification.
 
-| Experiment | Reported test accuracy |
+The project includes:
+
+- EfficientNetB0 transfer learning.
+- EfficientNetB3 fine-tuning experiments.
+- Training and validation monitoring.
+- Model evaluation on unseen test images.
+
+---
+
+## 📊 Experimental Results
+
+The following results are reported in the project's notebook experiments.
+
+| Model / Approach | Test Accuracy |
 |---|---:|
-| SIFT-transformed images | 99.31% |
-| HOG-transformed images | 95.52% |
-| Combined SIFT+HOG images | 99.31% |
+| SIFT-based CNN | 99.31% |
+| HOG-based CNN | 95.52% |
+| Combined SIFT + HOG CNN | 99.31% |
+| EfficientNetB3 | 86.90% |
 
-The `enhanced_money_detection_with_visuals.ipynb` output reports 86.90% test accuracy on 290 images for its EfficientNetB3 experiment. The difference in results reflects different experiment setups; these figures are notebook-reported results, not guarantees of performance on independently collected notes, different cameras, lighting, wear, or backgrounds.
+**Important:** These are notebook-reported experimental results, not independently reproduced benchmarks. Performance should be interpreted in the context of the dataset size, class distribution, preprocessing pipeline, and train/test split.
 
-## Loading a saved model
+The results demonstrate how different feature extraction strategies can influence classification performance.
 
-Keras artifacts can be loaded with TensorFlow, for example:
+---
 
-```python
-from tensorflow.keras.models import load_model
+## 💵 Supported Currency Classes
 
-model = load_model("combined_sift_hog_model.h5")
+The enhanced classification experiment includes nine categories:
+
+| Class |
+|---|
+| 1 EGP |
+| 5 EGP |
+| 10 EGP |
+| 10 EGP (New) |
+| 20 EGP |
+| 20 EGP (New) |
+| 50 EGP |
+| 100 EGP |
+| 200 EGP |
+
+The dataset includes different Egyptian banknote denominations and newer currency variations.
+
+---
+
+## 🛠️ Tech Stack
+
+| Category | Technologies |
+|---|---|
+| Programming Language | Python |
+| Deep Learning | TensorFlow, Keras |
+| Computer Vision | OpenCV |
+| Feature Extraction | SIFT, HOG |
+| Deep Learning Architectures | CNN, EfficientNet |
+| Data Processing | NumPy, Pandas |
+| Image Processing | Pillow, Scikit-image |
+| Visualization | Matplotlib, Seaborn |
+| Evaluation | Scikit-learn |
+| Development Environment | Jupyter Notebook |
+
+---
+
+## 📂 Repository Structure
+
+```text
+Egyptian_money_detection/
+│
+├── Egyptian currency/
+│
+├── Egyptian new currency/
+│   └── dataset/
+│       ├── train/
+│       ├── valid/
+│       └── test/
+│
+├── Euro coins and bills/
+│
+├── cam.ipynb
+├── test.ipynb
+│
+├── enhanced_money_detection_with_visuals.ipynb
+├── improved_money_detection.ipynb
+├── filters.ipynb
+│
+├── combined_sift_hog_model.h5
+├── sift_model.h5
+├── hog_model.h5
+├── efficientnetb0_egyptian_currency_model.h5
+│
+└── README.md
 ```
 
-A usable prediction pipeline also needs the exact preprocessing function and class-to-index mapping used during training. The included `cam.ipynb` and `test.ipynb` refer to a `label_encoder.pkl` file that is not present at the repository root, and they contain absolute Windows paths. Run the training notebook to recreate the model and label encoder, or update the inference notebook to use a matching encoder and local model path before relying on predictions. Do not infer class labels from a model's output index without that mapping.
+---
 
-## Limitations
+## 📓 Notebooks Guide
 
-- Dataset paths are hard-coded to a Windows machine and must be updated.
-- The notebooks are not a unified application and do not expose a stable prediction API.
-- Saved models require matching preprocessing and class-label mappings.
-- Image augmentation and train/validation/test split quality affect the reported metrics; the notebook outputs alone do not establish performance on real-world currency images.
-- The enhanced notebook includes horizontal flips. Since banknote designs can be orientation-dependent, validate this augmentation choice against the intended use case.
-- The model classifies image appearance; it does not authenticate a note or detect counterfeits.
+| Notebook | Description |
+|---|---|
+| `enhanced_money_detection_with_visuals.ipynb` | Image enhancement, dataset balancing, EfficientNetB3 fine-tuning, and evaluation. |
+| `improved_money_detection.ipynb` | EfficientNetB0 transfer learning experiment. |
+| `filters.ipynb` | SIFT, HOG, and combined feature extraction experiments. |
+| `cam.ipynb` | Model inference and visualization experiments. |
+| `test.ipynb` | Testing saved classification models. |
 
-## License and data
+---
 
-No license file is included in the repository. Standard copyright restrictions apply to reuse of the code unless the owner adds a license. Image and dataset rights may have separate terms; check them before redistributing images or deploying a model trained on them.
+## ⚙️ Installation & Setup
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/nabilamir1/Egyptian_money_detection.git
+
+cd Egyptian_money_detection
+```
+
+### 2. Install Dependencies
+
+```bash
+pip install tensorflow
+pip install opencv-python
+pip install numpy pandas
+pip install matplotlib seaborn
+pip install scikit-learn scikit-image
+pip install pillow tqdm
+pip install jupyter
+```
+
+### 3. Launch Jupyter Notebook
+
+```bash
+jupyter notebook
+```
+
+### 4. Run the Experiments
+
+Open the desired notebook and execute its cells.
+
+**Note:** Some notebooks contain machine-specific dataset paths. Update the training, validation, and testing directory paths according to your local environment before running them.
+
+Some inference experiments also expect a compatible `label_encoder.pkl` file, which is not included in the repository root.
+
+---
+
+## 🔬 Research & Learning Outcomes
+
+This project provided practical experience in:
+
+- Traditional Computer Vision and feature engineering.
+- CNN architecture development.
+- Transfer Learning and model fine-tuning.
+- Image preprocessing and enhancement.
+- Dataset preparation and class balancing.
+- Model evaluation and performance comparison.
+- Working with TensorFlow/Keras and saved deep learning models.
+
+---
+
+## ⚠️ Current Limitations
+
+- The current implementation focuses on image classification experiments rather than a complete real-time currency detection application.
+- Classification performance depends on image quality and dataset representation.
+- The reported metrics are specific to the experimental dataset and evaluation setup.
+- The models are not designed to verify banknote authenticity or detect counterfeit currency.
+- Some notebooks require path configuration and additional inference dependencies.
+
+---
+
+## 🔮 Future Improvements
+
+- Develop a real-time currency recognition application using a webcam or smartphone camera.
+- Explore YOLO-based banknote detection.
+- Improve model generalization with larger and more diverse datasets.
+- Optimize trained models for mobile and edge-device deployment.
+- Integrate Text-to-Speech for accessible currency recognition.
+- Build a user-friendly interface for practical testing.
+
+---
+
+## 👨‍💻 Developer
+
+**Nabil Amir**
+
+Artificial Intelligence & Computer Science Student  
+AI | Machine Learning | Deep Learning | Computer Vision
+
+**GitHub:** nabilamir1
+
+**Portfolio:** nabilamir1.github.io/portfolio/
+
+---
+
+<div align="center">
+
+### Built with Python, Computer Vision & Deep Learning 🇪🇬
+
+**Exploring AI-powered solutions for Egyptian currency recognition.**
+
+</div>
